@@ -1,0 +1,28 @@
+{
+  "name": "file-importer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/server.ts",
+    "dev": " tsx watch src/server.ts"
+  },
+  "devDependencies": {
+    "@types/multer": "^1.4.12",
+    "@types/node": "^22.13.10",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.14.0",
+    "@types/express": "^5.0.0",
+    "csv-parser": "^3.2.0",
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.40.0",
+    "express": "^4.21.2",
+    "mongodb": "^6.14.2",
+    "mongoose": "^8.12.1",
+    "multer": "^1.4.5-lts.1",
+    "xlsx": "^0.18.5"
+  }
+}
