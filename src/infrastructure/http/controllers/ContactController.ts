@@ -1,8 +1,59 @@
+import { IContactService } from '@/domain/services/contacts/IContactService';
 import { processXLSX } from '@/shared/utils/processXLSX';
 import { Request, Response } from 'express';
 import path from 'path';
 
 export default class ContactController {
+
+  constructor(private contactService: IContactService){}
+
+  public async list(req: Request, res: Response): Promise<any> {
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const usersData = await this.contactService.find(page, limit);
+
+      res.json(usersData);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  public async getContactById(req: Request, res: Response) {
+    try {
+      const id = req.params.id as string;
+
+      const result = await this.contactService.findById(id);
+
+      if (!result) {
+        res.json({message: "Contato não encontrado"})
+      }
+
+      res.json({
+        result
+      })
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  public async getContactByPhone(req: Request, res: Response) {
+    try {
+      const phone = req.query.phone as string;
+
+      const result = await this.contactService.findByPhone(phone);
+
+      if (!result) {
+        res.json({message: "Contato não encontrado"})
+      }
+
+      res.json({
+        result
+      })
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  }
 
   public async importFile(req: Request, res: Response): Promise<void> {
     if (!req.file) {

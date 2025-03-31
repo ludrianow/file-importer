@@ -55,3 +55,8 @@ export interface IContactList {
   discords: any[],
   hasContacted: boolean;
 }
+
+export interface IFilterContactList {
+  page: number;
+  limit: number;
+}

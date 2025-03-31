@@ -1,10 +1,8 @@
-import { upload } from '@/config/uploadConfig';
-import ContactController from '@/infrastructure/http/controllers/ContactController';
 import express from 'express';
+import contactRouter from './contact.route';
 
 const router = express.Router();
-const contactController = new ContactController();
 
-router.post('/files/import', upload.single('files'), contactController.importFile);
+router.use('/contact', contactRouter)
 
 export default router;
