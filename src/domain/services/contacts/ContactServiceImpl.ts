@@ -1,7 +1,9 @@
 import { ContactCreateOrUpdateDTO } from "@/application/dto/ContactCreateOrUpdateDTO";
 import { ContactResponseDTO } from "@/application/dto/ContactResponseDTO";
+import { IContactFilter } from "@/application/interface/IContactFilter";
 import { IContactRepository } from "@/domain/repositories/IContactRepository";
 import { ContactModel, IContact } from '@/infrastructure/database/mongodb/ContactModel';
+import { formatPhoneWhatsapp } from "@/shared/utils/formatPhone";
 import { IContactService } from "./IContactService";
 
 export class ContactServiceImpl implements IContactService {
@@ -51,10 +53,28 @@ export class ContactServiceImpl implements IContactService {
   }
 
   public async findByPhone(phone: string): Promise<IContact | null> {
-    const newPhone = `+${phone}`
 
-    const result = await this.contactRepository.getContactByPhone(newPhone)
+    const result = await this.contactRepository.getContactByPhone(formatPhoneWhatsapp(phone))
 
     return result;
   }
+
+  public async findByFilter(filter: IContactFilter, skip: number, limit: number): Promise<IContact[]> {
+
+    return await this.contactRepository.getContactByFilter(filter, skip, limit);
+  }
+
+  public async markLeadContacted(phone: string, typeContact: string[]): Promise<IContact| null> {
+    const contact = await this.findByPhone(phone);
+
+    if (!contact) {
+      throw new Error('Lead não encontrado')
+    }
+
+    const updatedTypesContact = Array.from(new Set(typeContact));
+
+
+    return await this.contactRepository.markLeadContacted(formatPhoneWhatsapp(phone), Array.from(updatedTypesContact));
+  }
+
 }

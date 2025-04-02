@@ -55,6 +55,37 @@ export default class ContactController {
     }
   }
 
+  public async markLeadContacted(req: Request, res: Response) {
+    try {
+      const {phone, typesContact} = req.body;
+
+      const result = await this.contactService.markLeadContacted(phone, typesContact);
+
+      res.json({
+        result
+      })
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  public async getContactByFilter(req: Request, res: Response) {
+    const {filter, pagination} = req.body;
+
+    try {
+
+      if(!pagination) throw new Error('Paginação é necessária')
+
+      const {page, limit} = pagination;
+
+      const data = await this.contactService.findByFilter(filter, page, limit)
+
+      res.json(data)
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
   public async importFile(req: Request, res: Response): Promise<void> {
     if (!req.file) {
       res.status(400).send("Nenhum arquivo enviado");
